@@ -1,0 +1,46 @@
+<form class="{{cssClass}}" autocomplete="off">
+    <header class="sheet-header">
+        <img src="{{item.img}}" data-edit="img" title="{{item.name}}" height="64" width="64"/>
+        <h1><input name="name" type="text" value="{{item.name}}" placeholder="{{ localize 'Name' }}"/></h1>
+    </header>
+    <div>
+        <table>
+            <tr>
+                <th>{{localize "coc7.weapon.skill"}}</th>
+                <th>{{localize "coc7.weapon.damage"}}</th>
+                <th>{{localize "coc7.weapon.db"}}</th>
+                <th>{{localize "coc7.weapon.range"}}</th>
+                <th>{{localize "coc7.weapon.num_attacks"}}</th>
+                <th>{{localize "coc7.weapon.ammo"}}</th>
+                <th>{{localize "coc7.weapon.break"}}</th>
+            </tr>
+            <tr>
+                <td>
+                    <input name="system.skill" type="text" value="{{system.skill}}" data-dtype="String" />
+                </td>
+                <td>
+                    <input name="system.damage" type="text" value="{{system.damage}}" data-dtype="String" />
+                </td>
+                <td>
+                    <select name="system.db">
+                        {{selectOptions config.db selected=system.db localize=true}}
+                        <option value="{{type}}">{{localize name}}</option>
+                    </select>
+                </td>
+                <td>
+                    <input name="system.range" type="text" value="{{system.range}}" data-dtype="String" />
+                </td>
+                <td>
+                    <input name="system.num_attacks" type="text" value="{{system.num_attacks}}" data-dtype="Number" />
+                </td>
+                <td>
+                    <input name="system.ammo" type="text" value="{{system.ammo}}" data-dtype="String" />
+                </td>
+                <td>
+                    <input name="system.break" type="text" value="{{system.break}}" data-dtype="String" />
+                </td>
+            </tr>
+        </table>
+    </div>
+    <textarea name="system.description">{{system.description}}</textarea>
+</form>

@@ -1,0 +1,21 @@
+{
+    "Actor": {},
+    "Item": {
+        "types": [
+            "weapon", "item"
+        ],
+        "weapon": {
+            "skill": "",
+            "damage": "",
+            "db": "",
+            "range": "",
+            "num_attacks": 1,
+            "ammo": "",
+            "break": 0,
+            "description": ""
+        },
+        "item": {
+            "description": ""
+        }
+    }
+}

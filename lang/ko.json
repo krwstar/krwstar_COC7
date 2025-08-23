@@ -1,0 +1,14 @@
+{
+    "coc7": {
+        "weapon": {
+            "skill": "기능",
+            "damage": "데미지",
+            "db": "피해보너스",
+            "range": "사거리",
+            "num_attacks": "공격횟수",
+            "ammo": "탄약",
+            "break": "고장",
+            "description": "설명"
+        }
+    }
+}

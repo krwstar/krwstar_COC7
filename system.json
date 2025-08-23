@@ -1,0 +1,30 @@
+{
+    "id": "krwstar_CoC7",
+    "title": "CoC7 by krwstar",
+    "description": "완성안될가능성매우높음",
+    "authors": [{"name": "krwstar"}],
+    "version": "0.01",
+    "esmodules": [
+        "krwstar_coc7.js"
+    ],
+    "styles": [
+
+    ],
+    "packs": [
+
+    ],
+    "languages":[
+        {
+        "lang": "ko",
+        "name": "Korean",
+        "path": "lang/ko.json",
+        "flags": {}
+        }
+    ],
+    "grid": {
+        "distance": 5,
+        "units": "m"
+    },
+    "primaryTokenAttribute": "HP",
+    "secondaryTokenAttribute": "MP"
+}
