@@ -1,5 +1,10 @@
 {
     "coc7": {
+        "label": {
+            "stats": "능력치",
+            "status": "스테이터스",
+            "skills": "기능"
+        },
         "weapon": {
             "skill": "기능",
             "damage": "데미지",
@@ -9,6 +14,73 @@
             "ammo": "탄약",
             "break": "고장",
             "description": "설명"
+        },
+        "stat": {
+            "STR": "근력",
+            "CON": "건강",
+            "SIZ": "크기",
+            "DEX": "민첩",
+            "APP": "외모",
+            "INT": "지능",
+            "POW": "정신력",
+            "EDU": "교육",
+            "LUK": "행운"
+        },
+        "status": {
+            "HP": "HP",
+            "MP": "MP",
+            "SAN": "SAN",
+            "build": "체구",
+            "db": "피해보너스",
+            "move": "이동력"
+        },
+        "skill": {
+            "name": "기능명",
+            "value": "수치"
+        },
+        "skills": {
+            "appraise": "감정",
+            "archaeology": "고고학",
+            "spotHidden": "관찰력",
+            "fightingBrawl": "근접전(격투)",
+            "mechanicalRepair": "기계수리",
+            "jump": "도약",
+            "listen": "듣기",
+            "fastTalk": "말재주",
+            "charm": "매혹",
+            "law": "법률",
+            "disguise": "변장",
+            "firearmsHandgun": "사격(권총)",
+            "firearmsRifleShotgun": "사격(라이플/산탄총)",
+            "persuade": "설득",
+            "sleightOfHand": "손놀림",
+            "swim": "수영",
+            "ride": "승마",
+            "psychology": "심리학",
+            "languageOwn": "모국어",
+            "history": "역사",
+            "locksmith": "열쇠공",
+            "climb": "오르기",
+            "occult": "오컬트",
+            "intimidate": "위협",
+            "stealth": "은밀행동",
+            "firstAid": "응급처치",
+            "medicine": "의료",
+            "anthropology": "인류학",
+            "driveAuto": "자동차운전",
+            "libraryUse": "자료조사",
+            "naturalWorld": "자연",
+            "creditRating": "재력",
+            "electricalRepair": "전기수리",
+            "psychoanalysis": "정신분석",
+            "operateHeavyMachinery": "중장비조작",
+            "track": "추적",
+            "cthulhuMythos": "크툴루 신화",
+            "throw": "투척",
+            "navigate": "항법",
+            "accounting": "회계",
+            "dodge": "회피",
+            "computerUse": "컴퓨터"
         }
     }
 }

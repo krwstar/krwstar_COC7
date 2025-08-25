@@ -1,0 +1,99 @@
+<form class="actor-sheet {{cssClass}}" autocomplete="off">
+    <header class="sheet-header">
+        <img src="{{actor.img}}" data-edit="img" title="{{actor.name}}" height="64" width="64"/>
+        <h1 class="charname">
+            <input name="name" type="text" value="{{actor.name}}" placeholder="{{ localize 'Name' }}"/>
+        </h1>
+    </header>
+
+    <!-- 스탯 -->
+    <section class="stats">
+        <h3>{{localize "coc7.label.stats"}}</h3>
+        <table>
+            <tr>
+                <th>{{localize "coc7.stat.STR"}}</th>
+                <th>{{localize "coc7.stat.CON"}}</th>
+                <th>{{localize "coc7.stat.SIZ"}}</th>
+                <th>{{localize "coc7.stat.DEX"}}</th>
+                <th>{{localize "coc7.stat.APP"}}</th>
+                <th>{{localize "coc7.stat.INT"}}</th>
+                <th>{{localize "coc7.stat.POW"}}</th>
+                <th>{{localize "coc7.stat.EDU"}}</th>
+                <th>{{localize "coc7.stat.LUK"}}</th>
+                </tr>
+            <tr>
+                <td><input type="number" name="system.stat.STR" value="{{system.stat.STR}}"></td>
+                <td><input type="number" name="system.stat.CON" value="{{system.stat.CON}}"></td>
+                <td><input type="number" name="system.stat.SIZ" value="{{system.stat.SIZ}}"></td>
+                <td><input type="number" name="system.stat.DEX" value="{{system.stat.DEX}}"></td>
+                <td><input type="number" name="system.stat.APP" value="{{system.stat.APP}}"></td>
+                <td><input type="number" name="system.stat.INT" value="{{system.stat.INT}}"></td>
+                <td><input type="number" name="system.stat.POW" value="{{system.stat.POW}}"></td>
+                <td><input type="number" name="system.stat.EDU" value="{{system.stat.EDU}}"></td>
+                <td><input type="number" name="system.stat.LUK" value="{{system.stat.LUK}}"></td>
+            </tr>
+        </table>
+    </section>
+
+
+    <!-- 스테이터스 -->
+    <section class="status">
+        <h3>{{localize "coc7.label.status"}}</h3>
+        <table>
+            <tr>
+                <th>{{localize "coc7.status.HP"}}</th>
+                <th>{{localize "coc7.status.MP"}}</th>
+                <th>{{localize "coc7.status.SAN"}}</th>
+                <th>{{localize "coc7.status.build"}}</th>
+                <th>{{localize "coc7.status.db"}}</th>
+                <th>{{localize "coc7.status.move"}}</th>
+            </tr>
+            <tr>
+                <td><input type="number" name="system.status.HP" value="{{system.status.HP}}"></td>
+                <td><input type="number" name="system.status.MP" value="{{system.status.MP}}"></td>
+                <td><input type="number" name="system.status.SAN" value="{{system.status.SAN}}"></td>
+                <td><input type="number" name="system.status.build" value="{{system.status.build}}"></td>
+                <td><input type="number" name="system.status.db" value="{{system.status.db}}"></td>
+                <td><input type="number" name="system.status.move" value="{{system.status.move}}"></td>
+            </tr>
+        </table>
+    </section>
+
+    <!-- 스킬 -->
+    <section class="skills">
+        <h3>{{localize "coc7.label.skills"}}</h3>
+        <table>
+            <tr>
+                <th>{{localize "coc7.skill.name"}}</th>
+                <th>{{localize "coc7.skill.value"}}</th>
+            </tr>
+            {{#each system.skills as |value key|}}
+            <tr>
+                <td>{{localize (concat "coc7.skills." key)}}</td>
+                <td>
+                    <input type="number" name="system.skills.{{key}}" value="{{value}}">
+                </td>
+            </tr>
+            {{/each}}
+        </table>
+    </section>
+
+    <!-- 소유 아이템 -->
+    <section class="items">
+        <h3 class="noborder">아이템</h3>
+        <ol class="actor-items">
+        {{#each actor.items as |item id|}}
+        <li class="actor-item" data-item-id="{{id}}">
+            <div class="item-name">
+            <img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/>
+            <h4>{{item.name}}</h4>
+            </div>
+            <div class="item-controls">
+            <a class="item-control item-edit" title="Edit Item"><i class="fa-solid fa-pen-to-square"></i></a>
+            <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
+            </div>
+        </li>
+        {{/each}}
+        </ol>
+    </section>
+</form>
