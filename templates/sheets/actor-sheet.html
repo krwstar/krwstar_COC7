@@ -34,12 +34,26 @@
                 <th>{{localize "coc7.status.move"}}</th>
             </tr>
             <tr>
-                <td><input type="number" name="system.status.HP" value="{{system.status.HP}}"></td>
-                <td><input type="number" name="system.status.MP" value="{{system.status.MP}}"></td>
-                <td><input type="number" name="system.status.SAN" value="{{system.status.SAN}}"></td>
-                <td><input type="number" name="system.status.build" value="{{system.status.build}}"></td>
-                <td><input type="string" name="system.status.db" value="{{system.status.db}}"></td>
-                <td><input type="number" name="system.status.move" value="{{system.status.move}}"></td>
+                <td>
+                    <input type="number" name="system.status.HP.value" value="{{system.status.HP.value}}" data-dtype="Number">
+                    /
+                    <span>{{system.status.HP.max}}</span>
+                </td>
+                <td>
+                    <input type="number" name="system.status.MP.value" value="{{system.status.MP.value}}" data-dtype="Number">
+                    /
+                    <span>{{system.status.MP.max}}</span>
+                </td>
+                <td>
+                    <input type="number" name="system.status.SAN.value" value="{{system.status.SAN.value}}" data-dtype="Number">
+                    /
+                    <span>{{system.status.SAN.max}}</span>
+                    /
+                    <span>{{system.status.SAN.limit}}</span>
+                </td>
+                <td>{{system.status.build}}</td>
+                <td>{{system.status.db}}</td>
+                <td>{{system.status.move}}</td>
             </tr>
         </table>
     </section>

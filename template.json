@@ -4,20 +4,20 @@
     "character": {
         "system": {
             "stat": {
-                "STR": 0,
-                "CON": 0,
-                "SIZ": 0,
-                "DEX": 0,
-                "APP": 0,
-                "INT": 0,
-                "POW": 0,
-                "EDU": 0,
-                "LUK": 0
+                "STR": { "base": 0 },
+                "CON": { "base": 0 },
+                "SIZ": { "base": 0 },
+                "DEX": { "base": 0 },
+                "APP": { "base": 0 },
+                "INT": { "base": 0 },
+                "POW": { "base": 0 },
+                "EDU": { "base": 0 },
+                "LUK": { "base": 0 }
             },
             "status": {
-                "HP": 0,
-                "MP": 0,
-                "SAN": 0,
+                "HP": { "value": 0, "max": 0 },
+                "MP": { "value": 0, "max": 0 },
+                "SAN": { "value": 0, "max": 0, "limit": 0 },
                 "build": 0,
                 "db": "",
                 "move": 0

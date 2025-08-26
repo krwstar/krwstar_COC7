@@ -1,22 +1,36 @@
 export default class COC7Actor extends Actor {
     /** @override */
+
+    // 피해보너스, 체구 계산기
+    _getDamageBonusAndBuild(sum) {
+        if (sum <= 64)  return { db: "-2",  build: -2 };
+        if (sum <= 84)  return { db: "-1",  build: -1 };
+        if (sum <= 124) return { db: "0",   build: 0  };
+        if (sum <= 164) return { db: "1d4", build: 1  };
+        if (sum <= 204) return { db: "1d6", build: 2  };
+
+        // 205 이상부터는 80점마다 +1d6 / +1 build
+        const offset = Math.floor((sum - 205) / 80); // 205~284 -> 0, 285~364 -> 1, ...
+        const dice   = 2 + offset;                   // 2d6부터 시작
+        const build  = 3 + offset;                   // build 3부터 시작
+        return { db: `${dice}d6`, build };
+    }
+
+    // 민첩과 근력이 크기보다 작으면 7
+    // 둘다 크기보다 크면 9
+    // 하나가 크기이상이거나 세 값이 같으면 8
+    _getMove(str, dex, siz) {
+        if (str < siz && dex < siz) return 7;
+        if (str > siz && dex > siz) return 9;
+        return 8;
+    }
+
     prepareData() {
         super.prepareData();
 
         const system = this.system;
 
         // 스탯 기본값
-        // system.stat ??= {};
-        // system.stat.STR ??= 0;
-        // system.stat.CON ??= 0;
-        // system.stat.SIZ ??= 0;
-        // system.stat.DEX ??= 0;
-        // system.stat.APP ??= 0;
-        // system.stat.INT ??= 0;
-        // system.stat.POW ??= 0;
-        // system.stat.EDU ??= 0;
-        // system.stat.LUK ??= 0;
-
         const defaultStat = {
             STR: { base: 0 },
             CON: { base: 0 },
@@ -28,28 +42,19 @@ export default class COC7Actor extends Actor {
             EDU: { base: 0 },
             LUK: { base: 0 },
         }
-
         system.stat ??= {};
         for (let [key, def] of Object.entries(defaultStat)) {
             if (!system.stat[key]) {
                 system.stat[key] = { base: def.base };
             }
         }
+
         // 파생치 계산
         for (let [key, stat] of Object.entries(system.stat)) {
             const base = Number(stat.base) || 0;
             system.stat[key].half = Math.floor(base / 2);
             system.stat[key].fifth = Math.floor(base / 5);
         }
-
-        // 스테이터스 기본값
-        system.status ??= {};
-        system.status.HP ??= 0;
-        system.status.MP ??= 0;
-        system.status.SAN ??= 0;
-        system.status.build ??= 0;
-        system.status.db ??= "0";
-        system.status.move ??= 0;
 
         // 스킬 기본값
         const defaultSkills = {
@@ -114,5 +119,60 @@ export default class COC7Actor extends Actor {
             system.skills[key].half = Math.floor(total / 2);
             system.skills[key].fifth = Math.floor(total / 5);
         }
+
+        // 스테이터스 기본값
+        system.status ??= {};
+        const str = Number(system.stat.STR?.base) || 0;
+        const con = Number(system.stat.CON?.base) || 0;
+        const siz = Number(system.stat.SIZ?.base) || 0;
+        const dex = Number(system.stat.DEX?.base) || 0;
+        const pow = Number(system.stat.POW?.base) || 0;
+        const cthulhuMythos = Number(system.skills["cthulhuMythos"]?.total) || 0;
+
+        // HP = (CON + SIZ) / 10
+        const hpMax = Math.floor((con + siz) / 10);
+        
+        if (typeof system.status.HP !== "object") {
+            system.status.HP = { value: hpMax, max: hpMax };
+        }
+
+        system.status.HP.max = hpMax;
+        if (system.status.HP.value == null) {
+            system.status.HP.value = hpMax;
+        }
+
+        // MP =  POW / 5
+        const mpMax = Math.floor(pow / 5);
+
+        if (typeof system.status.MP !== "object") {
+            system.status.MP = { value: mpMax, max: mpMax };
+        }
+
+        system.status.MP.max = mpMax;
+        if (system.status.MP.value == null) {
+            system.status.MP.value = mpMax;
+        }
+        
+        //SAN = POW
+        const sanMax = pow;
+        const sanLimit = 99 - cthulhuMythos;
+
+        if (typeof system.status.SAN !== "object") {
+            system.status.SAN = { value: sanMax, max: sanMax, limit: sanLimit };
+        }
+
+        system.status.SAN.max = sanMax;
+        system.status.SAN.limit = sanLimit;
+        if (system.status.SAN.value == null) {
+            system.status.SAN.value = sanMax;
+        }
+
+        // 체구와 피해보너스
+        const { db, build } = this._getDamageBonusAndBuild(str + siz);
+        system.status.db = db;
+        system.status.build = build;
+
+        // 이동력
+        system.status.move = this._getMove(str, dex, siz);
     }
 }
