@@ -10,31 +10,16 @@
     <section class="stats">
         <h3>{{localize "coc7.label.stats"}}</h3>
         <table>
+            {{#each system.stat as |stat key|}}
             <tr>
-                <th>{{localize "coc7.stat.STR"}}</th>
-                <th>{{localize "coc7.stat.CON"}}</th>
-                <th>{{localize "coc7.stat.SIZ"}}</th>
-                <th>{{localize "coc7.stat.DEX"}}</th>
-                <th>{{localize "coc7.stat.APP"}}</th>
-                <th>{{localize "coc7.stat.INT"}}</th>
-                <th>{{localize "coc7.stat.POW"}}</th>
-                <th>{{localize "coc7.stat.EDU"}}</th>
-                <th>{{localize "coc7.stat.LUK"}}</th>
-                </tr>
-            <tr>
-                <td><input type="number" name="system.stat.STR" value="{{system.stat.STR}}"></td>
-                <td><input type="number" name="system.stat.CON" value="{{system.stat.CON}}"></td>
-                <td><input type="number" name="system.stat.SIZ" value="{{system.stat.SIZ}}"></td>
-                <td><input type="number" name="system.stat.DEX" value="{{system.stat.DEX}}"></td>
-                <td><input type="number" name="system.stat.APP" value="{{system.stat.APP}}"></td>
-                <td><input type="number" name="system.stat.INT" value="{{system.stat.INT}}"></td>
-                <td><input type="number" name="system.stat.POW" value="{{system.stat.POW}}"></td>
-                <td><input type="number" name="system.stat.EDU" value="{{system.stat.EDU}}"></td>
-                <td><input type="number" name="system.stat.LUK" value="{{system.stat.LUK}}"></td>
+                <td>{{localize (concat "coc7.stat." key)}}</td>
+                <td><input type="number" name="system.stat.{{key}}.base" value="{{stat.base}}"></td>
+                <td>{{stat.half}}</td>
+                <td>{{stat.fifth}}</td>
             </tr>
+            {{/each}}
         </table>
     </section>
-
 
     <!-- 스테이터스 -->
     <section class="status">
@@ -67,12 +52,14 @@
                 <th>{{localize "coc7.skill.name"}}</th>
                 <th>{{localize "coc7.skill.value"}}</th>
             </tr>
-            {{#each system.skills as |value key|}}
+            {{#each system.skills as |skill key|}}
             <tr>
                 <td>{{localize (concat "coc7.skills." key)}}</td>
-                <td>
-                    <input type="number" name="system.skills.{{key}}" value="{{value}}">
-                </td>
+                <td><input type="number" name="system.skills.{{key}}.base" value="{{skill.base}}"></td>
+                <td><input type="number" name="system.skills.{{key}}.point" value="{{skill.point}}"></td>
+                <td>{{skill.total}}</td>
+                <td>{{skill.half}}</td>
+                <td>{{skill.fifth}}</td>
             </tr>
             {{/each}}
         </table>
