@@ -65,6 +65,12 @@
                 "accounting": { "base": 5, "point": 0 },
                 "dodge": { "base": 0, "point": 0 },
                 "computerUse": { "base": 5, "point": 0 }
+            },
+            "points": {
+                "jobSkillPoints": 0,
+                "hobbySkillPoints": 0,
+                "remainingPoints": 0,
+                "skillGrowth": 0
             }
         }
     }

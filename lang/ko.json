@@ -81,6 +81,12 @@
             "accounting": "회계",
             "dodge": "회피",
             "computerUse": "컴퓨터"
+        },
+        "points": {
+            "jobSkillPoints": "직업 기능 점수",
+            "hobbySkillPoints": "관심 기능 점수",
+            "remainingPoints": "남은 점수",
+            "skillGrowth": "스킬성장치"
         }
     }
 }

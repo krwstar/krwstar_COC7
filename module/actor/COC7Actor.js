@@ -18,7 +18,7 @@ export default class COC7Actor extends Actor {
 
     // 민첩과 근력이 크기보다 작으면 7
     // 둘다 크기보다 크면 9
-    // 하나가 크기이상이거나 세 값이 같으면 8
+    // 하나가 크기 이상이거나 세 값이 같으면 8
     _getMove(str, dex, siz) {
         if (str < siz && dex < siz) return 7;
         if (str > siz && dex > siz) return 9;
@@ -56,6 +56,15 @@ export default class COC7Actor extends Actor {
             system.stat[key].fifth = Math.floor(base / 5);
         }
 
+        const str = Number(system.stat.STR?.base) || 0;
+        const con = Number(system.stat.CON?.base) || 0;
+        const siz = Number(system.stat.SIZ?.base) || 0;
+        const dex = Number(system.stat.DEX?.base) || 0;
+        const pow = Number(system.stat.POW?.base) || 0;
+        const int = Number(system.stat.INT?.base) || 0;
+        const edu = Number(system.stat.EDU?.base) || 0;
+
+        
         // 스킬 기본값
         const defaultSkills = {
             appraise: { base: 5, point: 0 },
@@ -103,11 +112,15 @@ export default class COC7Actor extends Actor {
         };
         
         system.skills ??= {};
-        for (let [key, def] of Object.entries(defaultSkills)) {
+        for (let [key, skill] of Object.entries(defaultSkills)) {
             if (!system.skills[key]) {
-                system.skills[key] = { base: def.base, point: def.point };
+                system.skills[key] = { base: skill.base, point: skill.point };
             }
+            system.skills[key].isDefault = true;
         }
+        
+        system.skills["languageOwn"].base = edu;
+        system.skills["dodge"].base = Math.floor(dex / 2);
 
         // 파생치 계산
         for (let [key, skill] of Object.entries(system.skills)) {
@@ -118,15 +131,16 @@ export default class COC7Actor extends Actor {
             system.skills[key].total = total;
             system.skills[key].half = Math.floor(total / 2);
             system.skills[key].fifth = Math.floor(total / 5);
+
+            if (system.skills[key].isDefault == null) {
+                system.skills[key].isDefault = false;
+                system.skills[key].label ??= "새 스킬";
+            }
         }
+
 
         // 스테이터스 기본값
         system.status ??= {};
-        const str = Number(system.stat.STR?.base) || 0;
-        const con = Number(system.stat.CON?.base) || 0;
-        const siz = Number(system.stat.SIZ?.base) || 0;
-        const dex = Number(system.stat.DEX?.base) || 0;
-        const pow = Number(system.stat.POW?.base) || 0;
         const cthulhuMythos = Number(system.skills["cthulhuMythos"]?.total) || 0;
 
         // HP = (CON + SIZ) / 10
@@ -167,12 +181,31 @@ export default class COC7Actor extends Actor {
             system.status.SAN.value = sanMax;
         }
 
-        // 체구와 피해보너스
+        // 피해보너스, 체구
         const { db, build } = this._getDamageBonusAndBuild(str + siz);
         system.status.db = db;
         system.status.build = build;
 
         // 이동력
         system.status.move = this._getMove(str, dex, siz);
+
+
+        // 스킬 포인트
+        system.points ??= {};
+        const jobSkillPoints = edu * 4;
+        const hobbySkillPoints = int * 2;
+        const skillGrowth = Number(system.points?.skillGrowth) || 0;
+        
+        let allocatedPoints = 0;
+        for (let [key, skill] of Object.entries(system.skills)) {
+            allocatedPoints += Number(skill.point) || 0;
+        }
+
+        const remainingPoints = jobSkillPoints + hobbySkillPoints + skillGrowth - allocatedPoints;
+
+        system.points.jobSkillPoints = jobSkillPoints;
+        system.points.hobbySkillPoints = hobbySkillPoints;
+        system.points.remainingPoints = remainingPoints;
+        system.points.skillGrowth = skillGrowth;
     }
 }

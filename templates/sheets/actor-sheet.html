@@ -63,20 +63,46 @@
         <h3>{{localize "coc7.label.skills"}}</h3>
         <table>
             <tr>
+                <th>{{localize "coc7.points.jobSkillPoints"}}</th>
+                <th>{{localize "coc7.points.hobbySkillPoints"}}</th>
+                <th>{{localize "coc7.points.remainingPoints"}}</th>
+                <th>{{localize "coc7.points.skillGrowth"}}</th>
+            </tr>
+            <tr>
+                <td>{{system.points.jobSkillPoints}}</td>
+                <td>{{system.points.hobbySkillPoints}}</td>
+                <td>{{system.points.remainingPoints}}</td>
+                <td><input type="number" name="system.points.skillGrowth" value="{{system.points.skillGrowth}}" data-dtype="Number"></td>
+            </tr>
+        </table>
+        <table>
+            <tr>
                 <th>{{localize "coc7.skill.name"}}</th>
                 <th>{{localize "coc7.skill.value"}}</th>
             </tr>
             {{#each system.skills as |skill key|}}
             <tr>
-                <td>{{localize (concat "coc7.skills." key)}}</td>
+                {{#if skill.isDefault}}
+                    <td>{{localize (concat "coc7.skills." key)}}</td>
+                {{else}}
+                    <td><input type="text" name="system.skills.{{key}}.label" value="{{skill.label}}"></td>
+                {{/if}}
                 <td><input type="number" name="system.skills.{{key}}.base" value="{{skill.base}}"></td>
                 <td><input type="number" name="system.skills.{{key}}.point" value="{{skill.point}}"></td>
                 <td>{{skill.total}}</td>
                 <td>{{skill.half}}</td>
                 <td>{{skill.fifth}}</td>
+                <td>
+                {{#if skill.isDefault}}
+                    <!-- 기본 스킬: 삭제 없음 -->
+                {{else}}
+                    <a class="skill-delete" data-skill="{{key}}">❌</a>
+                {{/if}}
+                </td>
             </tr>
             {{/each}}
         </table>
+        <button type="button" class="skill-add">스킬 추가</button>
     </section>
 
     <!-- 소유 아이템 -->
