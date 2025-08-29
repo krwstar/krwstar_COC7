@@ -85,8 +85,7 @@
         <button type="button" class="status-add">스테이터스 추가</button>
     </section>
 
-
-    <!-- 스킬 -->
+    <!-- 기능 -->
     <section class="skills">
         <h3>{{localize "coc7.label.skills"}}</h3>
         <table>
@@ -121,11 +120,9 @@
                 <td>{{skill.half}}</td>
                 <td>{{skill.fifth}}</td>
                 <td>
-                {{#if skill.isDefault}}
-                    <!-- 기본 스킬: 삭제 없음 -->
-                {{else}}
+                {{#unless skill.isDefault}}
                     <a class="skill-delete" data-skill="{{key}}">❌</a>
-                {{/if}}
+                {{/unless}}
                 </td>
             </tr>
             {{/each}}
@@ -136,8 +133,8 @@
     <!-- 소유 아이템 -->
     <section class="items">
         <h3>아이템</h3>
-        <button type="button" class="item-create" data-type="item">아이템 추가</button>
         <button type="button" class="item-create" data-type="weapon">무기 추가</button>
+        <button type="button" class="item-create" data-type="item">아이템 추가</button>
         <ul>
             {{#each actor.items as |item|}}
             <li class="item" data-item-id="{{item.id}}">
@@ -149,6 +146,7 @@
             {{/each}}
         </ul>
     </section>
+
     <section class="import">
         <h3>코코포리아용 JSON 여기에 복붙</h3>
         <textarea class="ccfolia-json"></textarea>
