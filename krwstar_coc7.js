@@ -217,50 +217,50 @@ Hooks.on("chatMessage", async (chatLog, messageText, chatData) => {
 let currentSound = null;
 
 async function showOverlay({ image, duration = 5000, sound = null }) {
-  // 기존 오버레이 제거
-  const old = document.getElementById("dice-overlay");
-  if (old) old.remove();
+    // 기존 오버레이 제거
+    const old = document.getElementById("dice-overlay");
+    if (old) old.remove();
 
-  // 풀스크린 DIV 생성
-  const overlay = document.createElement("div");
-  overlay.id = "dice-overlay";
-  overlay.style.position = "fixed";
-  overlay.style.top = 0;
-  overlay.style.left = 0;
-  overlay.style.width = "100%";
-  overlay.style.height = "100%";
-  overlay.style.backgroundColor = "rgba(0,0,0,0.5)";
-  overlay.style.zIndex = 10000;
-  overlay.style.display = "flex";
-  overlay.style.alignItems = "center";
-  overlay.style.justifyContent = "center";
-  overlay.style.cursor = "pointer";
-  overlay.innerHTML = `<img src="${image}" style="max-width:100%; max-height:100%;">`;
-  document.body.appendChild(overlay);
+    // 풀스크린 DIV 생성
+    const overlay = document.createElement("div");
+    overlay.id = "dice-overlay";
+    overlay.style.position = "fixed";
+    overlay.style.top = 0;
+    overlay.style.left = 0;
+    overlay.style.width = "100%";
+    overlay.style.height = "100%";
+    overlay.style.backgroundColor = "rgba(0,0,0,0.5)";
+    overlay.style.zIndex = 10000;
+    overlay.style.display = "flex";
+    overlay.style.alignItems = "center";
+    overlay.style.justifyContent = "center";
+    overlay.style.cursor = "pointer";
+    overlay.innerHTML = `<img src="${image}" style="max-width:100%; max-height:100%;">`;
+    document.body.appendChild(overlay);
 
-  // 사운드 재생
-  if (sound) {
-    currentSound = await AudioHelper.play(
-      { src: sound, volume: 0.8, autoplay: true, loop: false },
-      true
-    );
-  }
-
-  // 클릭 시 닫기 + 사운드 정지
-  overlay.addEventListener("click", () => {
-    overlay.remove();
-    if (currentSound) {
-      try { currentSound.stop(); } catch(e) {}
-      currentSound = null;
+    // 사운드 재생
+    if (sound) {
+        currentSound = await AudioHelper.play(
+            { src: sound, volume: 0.8, autoplay: true, loop: false },
+            true
+        );
     }
-  });
 
-  // duration 지나면 자동 닫기 + 사운드 정지
-  setTimeout(() => {
-    overlay.remove();
-    if (currentSound) {
-      try { currentSound.stop(); } catch(e) {}
-      currentSound = null;
-    }
-  }, duration);
+    // 클릭 시 닫기 + 사운드 정지
+    overlay.addEventListener("click", () => {
+        overlay.remove();
+        if (currentSound) {
+            try { currentSound.stop(); } catch(e) {}
+            currentSound = null;
+        }
+    });
+
+    // duration 지나면 자동 닫기 + 사운드 정지
+    setTimeout(() => {
+        overlay.remove();
+        if (currentSound) {
+            try { currentSound.stop(); } catch(e) {}
+            currentSound = null;
+        }
+    }, duration);
 }
