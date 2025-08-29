@@ -225,5 +225,31 @@ export default class COC7ActorSheet extends ActorSheet {
             ui.notifications.info("코코포리아 JSON 불러오기 완료");
         })
 
+        
+        // 아이템 생성
+        html.find(".item-create").click(async ev => {
+            const type = ev.currentTarget.dataset.type; // item or weapon
+            const itemData = {
+                name: type === "weapon" ? "새 무기" : "새 아이템",
+                type,
+                system: {}
+            };
+            await this.actor.createEmbeddedDocuments("Item", [itemData]);
+        });
+
+        // 아이템 편집
+        html.find(".item-edit").click(ev => {
+            const li = $(ev.currentTarget).closest(".item");
+            const item = this.actor.items.get(li.data("itemId"));
+            item.sheet.render(true);
+        });
+
+        // 아이템 삭제
+        html.find(".item-delete").click(async ev => {
+            const li = $(ev.currentTarget).closest(".item");
+            const itemId = li.data("itemId");
+            await this.actor.deleteEmbeddedDocuments("Item", [itemId]);
+        });
+
     }
 }

@@ -135,25 +135,23 @@
 
     <!-- 소유 아이템 -->
     <section class="items">
-        <h3 class="noborder">아이템</h3>
-        <ol class="actor-items">
-        {{#each actor.items as |item id|}}
-        <li class="actor-item" data-item-id="{{id}}">
-            <div class="item-name">
-            <img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/>
-            <h4>{{item.name}}</h4>
-            </div>
-            <div class="item-controls">
-            <a class="item-control item-edit" title="Edit Item"><i class="fa-solid fa-pen-to-square"></i></a>
-            <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
-            </div>
-        </li>
-        {{/each}}
-        </ol>
+        <h3>아이템</h3>
+        <button type="button" class="item-create" data-type="item">아이템 추가</button>
+        <button type="button" class="item-create" data-type="weapon">무기 추가</button>
+        <ul>
+            {{#each actor.items as |item|}}
+            <li class="item" data-item-id="{{item.id}}">
+                <img src="{{item.img}}" width="24" height="24"/>
+                <span class="item-name">{{item.name}}</span>
+                <a class="item-edit">✎</a>
+                <a class="item-delete">❌</a>
+            </li>
+            {{/each}}
+        </ul>
     </section>
-        <section class="import">
-            <h3>코코포리아용 JSON 여기에 복붙</h3>
-            <textarea class="ccfolia-json"></textarea>
-            <button type="button" class="import-ccfolia">가져오기</button>
-        </section>
+    <section class="import">
+        <h3>코코포리아용 JSON 여기에 복붙</h3>
+        <textarea class="ccfolia-json"></textarea>
+        <button type="button" class="import-ccfolia">가져오기</button>
+    </section>
 </form>

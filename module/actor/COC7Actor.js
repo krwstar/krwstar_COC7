@@ -222,5 +222,9 @@ export default class COC7Actor extends Actor {
         system.points.hobbySkillPoints = hobbySkillPoints;
         system.points.remainingPoints = remainingPoints;
         system.points.skillGrowth = skillGrowth;
+
+        if (this.prototypeToken) {
+            this.prototypeToken.name = this.name;
+        }
     }
 }

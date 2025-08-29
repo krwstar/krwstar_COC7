@@ -17,3 +17,26 @@ Hooks.once("init", function () {
     Items.registerSheet("krwstar_CoC7", COC7ItemSheet, { makeDefault: true })
 
 });
+
+Hooks.on("updateActor", async (actor, changes, options, userId) => {
+    if (!changes.name) return;
+    
+    await actor.update({ "prototypeToken.name": changes.name });
+    for (const scene of game.scenes) {
+            const tokens = scene.tokens.filter(t => t.actor?.id === actor.id);
+            for (const token of tokens) {
+            if (token.name !== changes.name) {
+                await token.update({ name: changes.name });
+            }
+        }
+    }
+});
+
+Hooks.on("updateToken", async (tokenDoc, changes, options, userId) => {
+    if (!tokenDoc.actor) return;
+
+    const actorName = tokenDoc.actor.name;
+    if (changes.name && changes.name !== actorName) {
+        await tokenDoc.update({ name: actorName });
+    }
+});
