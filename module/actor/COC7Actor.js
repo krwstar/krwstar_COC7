@@ -3,17 +3,18 @@ export default class COC7Actor extends Actor {
 
     // 피해보너스, 체구 계산기
     _getDamageBonusAndBuild(sum) {
-        if (sum <= 64)  return { db: "-2",  build: -2 };
-        if (sum <= 84)  return { db: "-1",  build: -1 };
-        if (sum <= 124) return { db: "0",   build: 0  };
-        if (sum <= 164) return { db: "1d4", build: 1  };
-        if (sum <= 204) return { db: "1d6", build: 2  };
+        if (sum <= 64)  return { db: "-2", dbMax: -2, build: -2 };
+        if (sum <= 84)  return { db: "-1", dbMax: -1, build: -1 };
+        if (sum <= 124) return { db: "0",  dbMax:  0, build:  0 };
+        if (sum <= 164) return { db: "1d4", dbMax: 4, build: 1 };
+        if (sum <= 204) return { db: "1d6", dbMax: 6, build: 2 };
 
         // 205 이상부터는 80점마다 +1d6 / +1 build
         const offset = Math.floor((sum - 205) / 80); // 205~284 -> 0, 285~364 -> 1, ...
         const dice   = 2 + offset;                   // 2d6부터 시작
         const build  = 3 + offset;                   // build 3부터 시작
-        return { db: `${dice}d6`, build };
+        const dbMax = dice * 6;
+        return { db: `${dice}d6`, dbMax, build };
     }
 
     // 민첩과 근력이 크기보다 작으면 7
@@ -140,56 +141,70 @@ export default class COC7Actor extends Actor {
 
 
         // 스테이터스 기본값
-        system.status ??= {};
-        const cthulhuMythos = Number(system.skills["cthulhuMythos"]?.total) || 0;
-
-        // HP = (CON + SIZ) / 10
         const hpMax = Math.floor((con + siz) / 10);
-        
-        if (typeof system.status.HP !== "object") {
-            system.status.HP = { value: hpMax, max: hpMax };
+        const mpMax = Math.floor(pow / 5);
+        const sanMax = pow;
+        const cthulhuMythos = Number(system.skills["cthulhuMythos"]?.total) || 0;
+        const sanLimit = (99 - cthulhuMythos);
+        const { db, dbMax, build } = this._getDamageBonusAndBuild(str + siz);
+        const move = this._getMove(str, dex, siz);
+
+        const defaultStatus = {
+            HP:   { value: hpMax, max: hpMax },
+            MP:   { value: mpMax, max: mpMax },
+            SAN:  { value: sanMax, max: sanMax, limit: sanLimit, bonus: 0 },
+            build:{ value: build },
+            db:   { value: db, max: dbMax },
+            move: { value: move }
+        };
+
+        system.status ??= {};
+        for (let [key, def] of Object.entries(defaultStatus)) {
+            if (!system.status[key]) {
+                system.status[key] = foundry.utils.deepClone(def);
+            }
+            system.status[key].isDefault = true;
         }
 
+        if (system.status.SAN._importMax != null) {
+            const importMax = system.status.SAN._importMax;
+            system.status.SAN.bonus = Math.max(importMax - sanLimit, 0);
+            system.status.SAN.max = importMax;
+            delete system.status.SAN._importMax;
+        } else {
+            system.status.SAN.bonus ??= 0;
+            system.status.SAN.max ??= pow;
+        }
+        const sanBonus = Number(system.status.SAN?.bonus) || 0;
+        system.status.SAN.limit = sanLimit + sanBonus;
+
         system.status.HP.max = hpMax;
+        system.status.MP.max = mpMax;
+        system.status.build.value = build;
+        system.status.db.value = db;
+        system.status.db.max = dbMax;
+        system.status.move.value = move;
+
         if (system.status.HP.value == null) {
             system.status.HP.value = hpMax;
         }
-
-        // MP =  POW / 5
-        const mpMax = Math.floor(pow / 5);
-
-        if (typeof system.status.MP !== "object") {
-            system.status.MP = { value: mpMax, max: mpMax };
-        }
-
-        system.status.MP.max = mpMax;
         if (system.status.MP.value == null) {
             system.status.MP.value = mpMax;
         }
-        
-        //SAN = POW
-        const sanMax = pow;
-        const sanLimit = 99 - cthulhuMythos;
-
-        if (typeof system.status.SAN !== "object") {
-            system.status.SAN = { value: sanMax, max: sanMax, limit: sanLimit };
-        }
-
-        system.status.SAN.max = sanMax;
-        system.status.SAN.limit = sanLimit;
         if (system.status.SAN.value == null) {
-            system.status.SAN.value = sanMax;
+            system.status.SAN.value = sanMax + sanBonus;
         }
 
-        // 피해보너스, 체구
-        const { db, build } = this._getDamageBonusAndBuild(str + siz);
-        system.status.db = db;
-        system.status.build = build;
+        for (let [key, st] of Object.entries(system.status)) {
+            if (st.isDefault == null) {
+                st.isDefault = false;
+                st.label ??= "새 스테이터스";
+                st.value ??= 0;
+                st.max ??= 0;
+            }
+        }
 
-        // 이동력
-        system.status.move = this._getMove(str, dex, siz);
-
-
+        
         // 스킬 포인트
         system.points ??= {};
         const jobSkillPoints = edu * 4;

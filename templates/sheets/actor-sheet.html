@@ -26,37 +26,65 @@
         <h3>{{localize "coc7.label.status"}}</h3>
         <table>
             <tr>
-                <th>{{localize "coc7.status.HP"}}</th>
-                <th>{{localize "coc7.status.MP"}}</th>
-                <th>{{localize "coc7.status.SAN"}}</th>
-                <th>{{localize "coc7.status.build"}}</th>
-                <th>{{localize "coc7.status.db"}}</th>
-                <th>{{localize "coc7.status.move"}}</th>
+                <th>이름</th>
+                <th>현재</th>
+                <th>최대</th>
+                <th></th>
             </tr>
+            {{#each system.status as |stat key|}}
             <tr>
+            {{#if stat.isDefault}}
+                <td>{{localize (concat "coc7.status." key)}}</td>
+            {{else}}
+                <td><input type="text" name="system.status.{{key}}.label" value="{{stat.label}}"></td>
+            {{/if}}
+
+            {{#if (eq key "SAN")}}
                 <td>
-                    <input type="number" name="system.status.HP.value" value="{{system.status.HP.value}}" data-dtype="Number">
-                    /
-                    <span>{{system.status.HP.max}}</span>
+                    <input type="number" name="system.status.SAN.value" value="{{stat.value}}" data-dtype="Number">
                 </td>
                 <td>
-                    <input type="number" name="system.status.MP.value" value="{{system.status.MP.value}}" data-dtype="Number">
-                    /
-                    <span>{{system.status.MP.max}}</span>
+                    <input type="number" name="system.status.SAN.max" value="{{stat.max}}" data-dtype="Number">
                 </td>
                 <td>
-                    <input type="number" name="system.status.SAN.value" value="{{system.status.SAN.value}}" data-dtype="Number">
-                    /
-                    <span>{{system.status.SAN.max}}</span>
-                    /
-                    <span>{{system.status.SAN.limit}}</span>
+                    (보정: <input type="number" name="system.status.SAN.bonus" value="{{stat.bonus}}" data-dtype="Number">)
+                    / <span>{{stat.limit}}</span>
                 </td>
-                <td>{{system.status.build}}</td>
-                <td>{{system.status.db}}</td>
-                <td>{{system.status.move}}</td>
+
+            {{else if (eq key "db")}}
+                <td>
+                    <input type="text" name="system.status.db.value" value="{{stat.value}}">
+                </td>
+                <td>
+                    <span>{{stat.max}}</span>
+                </td>
+
+            {{else if (or (eq key "build") (eq key "move"))}}
+                <td>
+                    <input type="number" name="system.status.{{key}}.value" value="{{stat.value}}">
+                </td>
+                <td>—</td>
+
+            {{else}}
+                <td>
+                    <input type="number" name="system.status.{{key}}.value" value="{{stat.value}}">
+                </td>
+                <td>
+                    <input type="number" name="system.status.{{key}}.max" value="{{stat.max}}">
+                </td>
+            {{/if}}
+
+                <td>
+                    {{#unless stat.isDefault}}
+                        <a class="status-delete" data-stat="{{key}}">❌</a>
+                    {{/unless}}
+                </td>
             </tr>
+            {{/each}}
         </table>
+        <button type="button" class="status-add">스테이터스 추가</button>
     </section>
+
 
     <!-- 스킬 -->
     <section class="skills">
@@ -123,4 +151,9 @@
         {{/each}}
         </ol>
     </section>
+        <section class="import">
+            <h3>코코포리아용 JSON 여기에 복붙</h3>
+            <textarea class="ccfolia-json"></textarea>
+            <button type="button" class="import-ccfolia">가져오기</button>
+        </section>
 </form>

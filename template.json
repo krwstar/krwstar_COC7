@@ -15,12 +15,12 @@
                 "LUK": { "base": 0 }
             },
             "status": {
-                "HP": { "value": 0, "max": 0 },
-                "MP": { "value": 0, "max": 0 },
-                "SAN": { "value": 0, "max": 0, "limit": 0 },
-                "build": 0,
-                "db": "",
-                "move": 0
+                "HP": { "value": 0, "max": 0, "isDefault": true },
+                "MP": { "value": 0, "max": 0, "isDefault": true  },
+                "SAN": { "value": 0, "max": 0, "limit": 0, "bonus": 0, "isDefault": true  },
+                "build": { "value": 0, "max": 0, "isDefault": true  },
+                "db": { "value": "", "isDefault": true },
+                "move": { "value": 0, "isDefault": true }
             },
             "skills": {
                 "appraise": { "base": 5, "point": 0 },
