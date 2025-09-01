@@ -45,7 +45,15 @@ Hooks.on("updateToken", async (tokenDoc, changes, options, userId) => {
 // 다이스봇
 Hooks.on("chatMessage", async (chatLog, messageText, chatData) => {
     if (messageText.startsWith("cc")) {
-        const skillName = messageText.slice(2).trim();
+        let rest = messageText.slice(2).trim();
+        let modifier = 0;
+        let skillName = rest;
+
+        const match = rest.match(/^([+-]?\d+)(.+)$/);
+        if (match) {
+            modifier = parseInt(match[1], 10); // 보너스/페널티 다이스
+            skillName = match[2].trim();
+        }
         
         let actor = game.user.character;
         if (!actor) {
@@ -141,8 +149,27 @@ Hooks.on("chatMessage", async (chatLog, messageText, chatData) => {
         }
 
         if (rollTarget != null) {
-            const roll = await Roll.create("1d100").evaluate();
-            const result = roll.total;
+            const ones = (await new Roll("1d10").evaluate()).total % 10;
+
+            // 십의 자리 주사위 여러 개
+            const tensDice = [];
+            const numTens = 1 + Math.abs(modifier);
+            for (let i = 0; i < numTens; i++) {
+                tensDice.push((await new Roll("1d10").evaluate()).total % 10);
+            }
+
+            let chosenTens;
+            if (modifier > 0) {
+                chosenTens = Math.min(...tensDice); // 보너스
+            } else if (modifier < 0) {
+                chosenTens = Math.max(...tensDice); // 페널티
+            } else {
+                chosenTens = tensDice[0];           // 기본
+            }
+
+            // 결과값 계산 (00은 100 처리)
+            let result = chosenTens * 10 + ones;
+            if (chosenTens === 0 && ones === 0) result = 100;
 
             let outcome = "실패";
             if (result === 1) {
@@ -157,14 +184,35 @@ Hooks.on("chatMessage", async (chatLog, messageText, chatData) => {
                 outcome = "성공";
             }
 
-            roll.toMessage({
-                speaker: ChatMessage.getSpeaker({actor}),
-                flavor: `${skillName} 판정 (목표치 ${rollTarget})`,
-                content: `
+            // 후보 주사위 전체 값 계산
+            function calcD100(tens, ones) {
+                let val = tens * 10 + ones;
+                if (tens === 0 && ones === 0) val = 100;
+                return val;
+            }
+
+            const candidates = tensDice.map(t => calcD100(t, ones));
+            const chosenVal = calcD100(chosenTens, ones);
+
+            // 표시 문자열
+            let diceDetail = "";
+            if (modifier !== 0) {
+                diceDetail = ` (${candidates.join(", ")} → ${chosenVal})`;
+            }
+
+            const content = `
                 <div>
-                    <b>${outcome}</b> (주사위: ${result})
+                    <b>${outcome}</b>
+                    (주사위: <b>${result}</b>${diceDetail})
                 </div>
-                `
+            `;
+
+            const fakeFormula = `${tensDice.length}d10 + 1d10`;
+            const fakeRoll = await new Roll(fakeFormula).evaluate();
+            await fakeRoll.toMessage({
+                speaker: ChatMessage.getSpeaker({actor}),
+                flavor: `${skillName} 판정 (목표치 ${rollTarget}, 보너스/페널티: ${modifier})`,
+                content: content
             });
 
             const effects = {
@@ -240,7 +288,7 @@ async function showOverlay({ image, duration = 5000, sound = null }) {
 
     // 사운드 재생
     if (sound) {
-        currentSound = await AudioHelper.play(
+        currentSound = await foundry.audio.AudioHelper.play(
             { src: sound, volume: 0.8, autoplay: true, loop: false },
             true
         );
