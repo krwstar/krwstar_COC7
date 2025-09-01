@@ -158,18 +158,23 @@ Hooks.on("chatMessage", async (chatLog, messageText, chatData) => {
                 tensDice.push((await new Roll("1d10").evaluate()).total % 10);
             }
 
-            let chosenTens;
-            if (modifier > 0) {
-                chosenTens = Math.min(...tensDice); // 보너스
-            } else if (modifier < 0) {
-                chosenTens = Math.max(...tensDice); // 페널티
-            } else {
-                chosenTens = tensDice[0];           // 기본
+            // 후보 주사위 전체 값 계산
+            function calcD100(tens, ones) {
+                let val = tens * 10 + ones;
+                if (tens === 0 && ones === 0) val = 100;
+                return val;
             }
 
-            // 결과값 계산 (00은 100 처리)
-            let result = chosenTens * 10 + ones;
-            if (chosenTens === 0 && ones === 0) result = 100;
+            const candidates = tensDice.map(t => calcD100(t, ones));
+
+            let result;
+            if (modifier > 0) {
+                result = Math.min(...candidates);   // 보너스 → 최종값 최소
+            } else if (modifier < 0) {
+                result = Math.max(...candidates);   // 페널티 → 최종값 최대
+            } else {
+                result = candidates[0];             // 보정 없음
+            }
 
             let outcome = "실패";
             if (result === 1) {
@@ -184,20 +189,10 @@ Hooks.on("chatMessage", async (chatLog, messageText, chatData) => {
                 outcome = "성공";
             }
 
-            // 후보 주사위 전체 값 계산
-            function calcD100(tens, ones) {
-                let val = tens * 10 + ones;
-                if (tens === 0 && ones === 0) val = 100;
-                return val;
-            }
-
-            const candidates = tensDice.map(t => calcD100(t, ones));
-            const chosenVal = calcD100(chosenTens, ones);
-
             // 표시 문자열
             let diceDetail = "";
             if (modifier !== 0) {
-                diceDetail = ` (${candidates.join(", ")} → ${chosenVal})`;
+                diceDetail = ` (${candidates.join(", ")} → ${result})`;
             }
 
             const content = `
