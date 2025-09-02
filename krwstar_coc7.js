@@ -169,9 +169,9 @@ Hooks.on("chatMessage", async (chatLog, messageText, chatData) => {
 
             let result;
             if (modifier > 0) {
-                result = Math.min(...candidates);   // 보너스 → 최종값 최소
+                result = Math.min(...candidates);   // 보너스
             } else if (modifier < 0) {
-                result = Math.max(...candidates);   // 페널티 → 최종값 최대
+                result = Math.max(...candidates);   // 페널티
             } else {
                 result = candidates[0];             // 보정 없음
             }
@@ -254,6 +254,63 @@ Hooks.on("chatMessage", async (chatLog, messageText, chatData) => {
 
         return false;
     }
+
+    // // 매개변수 호출: {키}
+    // if (messageText.startsWith("{") && messageText.endsWith("}")) {
+    //     const key = messageText.slice(1, -1).trim();
+
+    //     let actor = game.user.character;
+    //     if (!actor) {
+    //     const controlled = canvas.tokens.controlled[0];
+    //     if (controlled) actor = controlled.actor;
+    //     }
+    //     if (!actor) {
+    //     ui.notifications.warn("굴릴 캐릭터를 찾을 수 없습니다.");
+    //     return false;
+    //     }
+
+    //     // actor.system.params에서 해당 label 찾기
+    //     const param = Object.values(actor.system.params || {}).find(p => p.label === key);
+    //     if (!param) {
+    //     ui.notifications.warn(`"${key}" 매개변수를 찾을 수 없습니다.`);
+    //     return false;
+    //     }
+
+    //     // 메시지 빌드
+    //     let results = [];
+    //     for (let f of param.formulas || []) {
+    //     let rollResult = null;
+    //     let display = "";
+
+    //     if (/d/.test(f.formula)) {
+    //         // 주사위 굴림
+    //         const roll = await new Roll(f.formula, actor.getRollData?.()).evaluate({async: true});
+    //         rollResult = roll.total;
+    //         display = `${f.flavor || f.type}: ${rollResult} (${f.formula})`;
+    //         // 결과 로그에 주사위 결과 포함
+    //         results.push(display);
+    //     } else {
+    //         // 그냥 숫자/텍스트
+    //         display = `${f.flavor || f.type}: ${f.formula}`;
+    //         results.push(display);
+    //     }
+    //     }
+
+    //     const content = `
+    //     <div>
+    //         <b>${param.label}</b> ${param.flavor ? "(" + param.flavor + ")" : ""}
+    //         <hr>
+    //         ${results.join("<br>")}
+    //     </div>
+    //     `;
+
+    //     ChatMessage.create({
+    //     speaker: ChatMessage.getSpeaker({actor}),
+    //     content
+    //     });
+
+    //     return false;
+    // }
 });
 
 

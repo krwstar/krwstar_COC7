@@ -71,7 +71,8 @@
                 "hobbySkillPoints": 0,
                 "remainingPoints": 0,
                 "skillGrowth": 0
-            }
+            },
+            "params": {}
         }
     }
 },

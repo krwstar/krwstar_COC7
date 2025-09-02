@@ -226,5 +226,10 @@ export default class COC7Actor extends Actor {
         if (this.prototypeToken) {
             this.prototypeToken.name = this.name;
         }
+
+        
+        // 매개변수
+        system.params ??= {};
+
     }
 }

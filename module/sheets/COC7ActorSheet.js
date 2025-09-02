@@ -65,7 +65,6 @@ export default class COC7ActorSheet extends ActorSheet {
             await this.actor.update({ [`system.skills.-=${key}`]: null });
         });
 
-        
         // 코코포리아용 JSON 복붙
         html.find(".import-ccfolia").click(async ev => {
             const input = html.find("textarea.ccfolia-json").val();
